@@ -29,12 +29,9 @@ def cli(ctx, debug, config_source):
 # Import and register subcommands
 from aidoctool.commands.config_command import config as config_command
 from aidoctool.commands.debug_command import debug as debug_command
-# Import any test commands if needed
-# ...add other commands here as implemented...
 
 cli.add_command(config_command)
 cli.add_command(debug_command)
-# ...add other commands here as implemented...
 
 if __name__ == "__main__":
     cli()

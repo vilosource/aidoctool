@@ -27,6 +27,12 @@ class YamlConfigLoader(ConfigLoader):
                 profile["api_key"] = os.environ.get(env_var, "")
         return data
 
+    def save_config(self, config_data):
+        os.makedirs(self.config_path.parent, exist_ok=True)
+        with open(self.config_path, 'w') as f:
+            yaml.safe_dump(config_data, f)
+        os.chmod(self.config_path, 0o600)
+
 class EnvConfigLoader(ConfigLoader):
     def __init__(self, dotenv_path=None):
         self.dotenv_path = dotenv_path or (Path.home() / ".env")

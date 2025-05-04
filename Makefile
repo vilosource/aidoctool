@@ -3,8 +3,8 @@
 .PHONY: test lint format
 
 # Run all tests with pytest
- test:
-	pytest aidoctool/tests
+test:
+	PYTHONPATH=. pytest tests
 
 # Lint with flake8
 lint:

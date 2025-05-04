@@ -11,15 +11,18 @@ logger = logging.getLogger(__name__)
 
 def dump_config(config, verbose=False):
     """
-    Print the current configuration in a readable format.
+    Format the current configuration in a readable format.
     
     Args:
         config (dict): The configuration dictionary
         verbose (bool): Whether to show sensitive information like API keys
+        
+    Returns:
+        str: The formatted configuration string
     """
     if not config:
         logger.info("No configuration found.")
-        return
+        return "No configuration found."
     
     # Create a deep copy to avoid modifying the original
     config_copy = {}
@@ -28,7 +31,7 @@ def dump_config(config, verbose=False):
         config_copy = copy.deepcopy(config)
     else:
         logger.info(f"Config is not a dictionary: {type(config)}")
-        return
+        return f"Config is not a dictionary: {type(config)}"
     
     # Mask API keys if not verbose
     if not verbose and "profiles" in config_copy and isinstance(config_copy["profiles"], dict):
@@ -36,17 +39,21 @@ def dump_config(config, verbose=False):
             if isinstance(profile, dict) and "api_key" in profile:
                 profile["api_key"] = "sk-***" if profile["api_key"] else None
     
-    # Format and print
+    # Format and return
     try:
         formatted = yaml.dump(config_copy, default_flow_style=False, sort_keys=False)
         logger.info(f"Current configuration:\n{formatted}")
+        return formatted
     except Exception as e:
         logger.error(f"Error formatting config: {e}")
         # Try a simpler representation if YAML dump fails
         try:
-            logger.info(f"Raw config: {config_copy}")
+            simple_repr = str(config_copy)
+            logger.info(f"Raw config: {simple_repr}")
+            return simple_repr
         except:
             logger.error("Unable to display configuration")
+            return "Unable to display configuration"
 
 def check_config_file_exists():
     """Check if the config file exists and return its path."""

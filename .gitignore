@@ -85,3 +85,4 @@ ENV/
 
 # System
 Thumbs.db
+.aider*
