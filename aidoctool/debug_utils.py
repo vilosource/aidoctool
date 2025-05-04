@@ -45,16 +45,24 @@ def dump_config(config, verbose=False):
 
 def check_config_file_exists():
     """Check if the config file exists and return its path."""
-    from aidoctool.config import CONFIG_PATH
-    
-    if CONFIG_PATH.exists():
-        logger.info(f"Config file found at: {CONFIG_PATH}")
-        return True
-    else:
-        logger.warning(f"Config file not found at: {CONFIG_PATH}")
+    try:
+        from aidoctool.config import CONFIG_PATH
+        
+        if CONFIG_PATH.exists():
+            logger.info(f"Config file found at: {CONFIG_PATH}")
+            return True
+        else:
+            logger.warning(f"Config file not found at: {CONFIG_PATH}")
+            return False
+    except Exception as e:
+        logger.error(f"Error checking config file: {e}")
         return False
 
 def get_config_dir():
     """Return the configuration directory."""
-    from aidoctool.config import CONFIG_PATH
-    return CONFIG_PATH.parent
+    try:
+        from aidoctool.config import CONFIG_PATH
+        return CONFIG_PATH.parent
+    except Exception as e:
+        logger.error(f"Error getting config directory: {e}")
+        return Path.home() / ".aidoctool"
