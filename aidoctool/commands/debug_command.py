@@ -23,11 +23,14 @@ def debug_config(ctx, verbose):
         logger.error("Config manager not initialized.")
         return
     
-    config = config_manager.get_config()
-    dump_config(config, verbose)
-    check_config_file_exists()
-    config_dir = get_config_dir()
-    logger.info(f"Config directory: {config_dir}")
+    try:
+        config = config_manager.get_config()
+        dump_config(config, verbose)
+        check_config_file_exists()
+        config_dir = get_config_dir()
+        logger.info(f"Config directory: {config_dir}")
+    except Exception as e:
+        logger.error(f"Error retrieving configuration: {e}")
 
 @debug.command('info')
 def debug_info():

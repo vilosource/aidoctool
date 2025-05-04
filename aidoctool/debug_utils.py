@@ -22,17 +22,26 @@ def dump_config(config, verbose=False):
         return
     
     # Create a copy to avoid modifying the original
-    config_copy = config.copy()
+    config_copy = {}
+    if isinstance(config, dict):
+        config_copy = config.copy()
+    else:
+        logger.info(f"Config is not a dictionary: {type(config)}")
+        return
     
     # Mask API keys if not verbose
-    if not verbose and "profiles" in config_copy:
-        for profile in config_copy["profiles"].values():
-            if "api_key" in profile:
+    if not verbose and "profiles" in config_copy and isinstance(config_copy["profiles"], dict):
+        for profile_name, profile in config_copy["profiles"].items():
+            if isinstance(profile, dict) and "api_key" in profile:
                 profile["api_key"] = "sk-***" if profile["api_key"] else None
     
     # Format and print
-    formatted = yaml.dump(config_copy, default_flow_style=False, sort_keys=False)
-    logger.info(f"Current configuration:\n{formatted}")
+    try:
+        formatted = yaml.dump(config_copy, default_flow_style=False, sort_keys=False)
+        logger.info(f"Current configuration:\n{formatted}")
+    except Exception as e:
+        logger.error(f"Error formatting config: {e}")
+        logger.info(f"Raw config: {config_copy}")
 
 def check_config_file_exists():
     """Check if the config file exists and return its path."""
