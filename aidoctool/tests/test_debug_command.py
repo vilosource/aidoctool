@@ -2,6 +2,8 @@ import pytest
 from click.testing import CliRunner
 from aidoctool.commands.debug_command import debug
 from aidoctool.cli import cli
+import os
+import sys
 
 def test_debug_config_command():
     runner = CliRunner()
@@ -27,6 +29,9 @@ def setup_test_config(monkeypatch, tmp_path):
     # Patch paths
     monkeypatch.setattr('aidoctool.config.CONFIG_PATH', config_file)
     monkeypatch.setattr('aidoctool.config_loader.Path.home', lambda: tmp_path)
+    
+    # Make sure the config directory exists
+    os.makedirs(config_dir, exist_ok=True)
     
     # Create a test profile
     runner = CliRunner()

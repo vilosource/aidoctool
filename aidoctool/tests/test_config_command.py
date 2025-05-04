@@ -7,13 +7,17 @@ from aidoctool.commands.config_command import config
 from aidoctool.config_manager import ConfigManager, ReadOnlyConfigManager
 from aidoctool.config_loader import YamlConfigLoader, EnvConfigLoader
 import pathlib
+import sys
 
 @pytest.fixture(autouse=True)
 def isolate_config(monkeypatch, tmp_path):
     # Use a temporary directory for config file
     temp_dir = tmp_path
     temp_config = temp_dir / "config.yaml"
+    config_dir = temp_dir / ".aidoctool"
+    os.makedirs(config_dir, exist_ok=True)
     monkeypatch.setattr('aidoctool.config_loader.Path.home', lambda: temp_dir)
+    monkeypatch.setattr('aidoctool.config.CONFIG_PATH', config_dir / "config.yaml")
     yield
 
 def test_add_profile():
