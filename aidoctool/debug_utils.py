@@ -21,10 +21,11 @@ def dump_config(config, verbose=False):
         logger.info("No configuration found.")
         return
     
-    # Create a copy to avoid modifying the original
+    # Create a deep copy to avoid modifying the original
     config_copy = {}
     if isinstance(config, dict):
-        config_copy = config.copy()
+        import copy
+        config_copy = copy.deepcopy(config)
     else:
         logger.info(f"Config is not a dictionary: {type(config)}")
         return
@@ -41,7 +42,11 @@ def dump_config(config, verbose=False):
         logger.info(f"Current configuration:\n{formatted}")
     except Exception as e:
         logger.error(f"Error formatting config: {e}")
-        logger.info(f"Raw config: {config_copy}")
+        # Try a simpler representation if YAML dump fails
+        try:
+            logger.info(f"Raw config: {config_copy}")
+        except:
+            logger.error("Unable to display configuration")
 
 def check_config_file_exists():
     """Check if the config file exists and return its path."""
